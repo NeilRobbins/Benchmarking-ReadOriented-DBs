@@ -1,3 +1,6 @@
+USE Star_Schema_Benchmark
+GO
+
 -- QUERIES
 
 --Q1.1
@@ -14,62 +17,62 @@ and lo_quantity < 25;
 
 select sum(lo_extendedprice*lo_discount) as
 revenue
-from lineorder, date
-where lo_orderdate =  d_datekey
-and d_yearmonth = 199401
-and lo_discount between4 and 6
+from lineorder, [date]
+where lo_orderdatekey =  d_datekey
+and d_yearmonthnum = 199401
+and lo_discount between 4 and 6
 and lo_quantity between 26 and 35;
 
 --Q1.3
 select sum(lo_extendedprice*lo_discount) as
 revenue
-from lineorder, date
-where lo_orderdate =  d_datekey
+from lineorder, [date]
+where lo_orderdatekey =  d_datekey
 and d_weeknuminyear = 6
 and d_year = 1994
 and lo_discount between 5 and 7
 and lo_quantity between 26 and 35;
 
 --Q2.1
-select sum(lo_revenue), d_year, p_brand1
-from lineorder, date, part, supplier
-where lo_orderdate =  d_datekey
+select sum(lo_revenue), d_year, p_brand
+from lineorder, [date], part, supplier
+where lo_orderdatekey =  d_datekey
 and lo_partkey = p_partkey
 and lo_suppkey = s_suppkey
 and p_category = 'MFGR#12'
 and s_region = 'AMERICA'
-group by d_year, p_brand1
-order by d_year, p_brand1;
+group by d_year, p_brand
+order by d_year, p_brand;
 
 --Q2.2
-select sum(lo_revenue), d_year, p_brand1
-from lineorder, date, part, supplier
-where lo_orderdate =  d_datekey
+select sum(lo_revenue), d_year, p_brand
+from lineorder, [date], part, supplier
+where lo_orderdatekey =  d_datekey
 and lo_partkey = p_partkey
 and lo_suppkey = s_suppkey
-and p_brand1between 'MFGR#2221'
+and p_brand between 'MFGR#2221'
 and 'MFGR#2228'
 and s_region = 'ASIA'
-group by d_year, p_brand1
-order by d_year, p_brand1;
+group by d_year, p_brand
+order by d_year, p_brand;
 --Q2.3
-select sum(lo_revenue), d_year, p_brand1
-from lineorder, date, part, supplier
-where lo_orderdate =  d_datekey
+select sum(lo_revenue), d_year, p_brand
+from lineorder, [date], part, supplier
+where lo_orderdatekey =  d_datekey
 and lo_partkey = p_partkey
 and lo_suppkey = s_suppkey
-and p_brand1= 'MFGR#2239'
+and p_brand= 'MFGR#2239'
 and s_region = 'EUROPE'
-group by d_year, p_brand1
-order by d_year, p_brand1;
+group by d_year, p_brand
+order by d_year, p_brand;
 
 --Q3.1
 select c_nation, s_nation, d_year,
 sum(lo_revenue)  as  revenue
-from customer, lineorder, supplier, date
-where lo_custkey = c_custkey
+from customer, lineorder, supplier, [date]
+where lo_custkey = c_customerkey
 and lo_suppkey = s_suppkey
-and lo_orderdate = d_datekey
+and lo_orderdatekey = d_datekey
 and c_region = 'ASIA'
 and s_region = 'ASIA'
 and d_year >= 1992 and d_year <= 1997
@@ -79,10 +82,10 @@ order by d_year asc,  revenue desc;
 --Q3.2
 select c_city, s_city, d_year, sum(lo_revenue)
 as  revenue
-from customer, lineorder, supplier, date
-where lo_custkey = c_custkey
+from customer, lineorder, supplier, [date]
+where lo_custkey = c_customerkey
 and lo_suppkey = s_suppkey
-and lo_orderdate = d_datekey
+and lo_orderdatekey = d_datekey
 and c_nation = 'UNITED STATES'
 and s_nation = 'UNITED STATES'
 and d_year >= 1992 and d_year <= 1997
@@ -92,10 +95,10 @@ order by d_year asc,  revenue desc;
 --Q3.3
 select c_city, s_city, d_year, sum(lo_revenue)
 as  revenue
-from customer, lineorder, supplier, date
-where lo_custkey = c_custkey
+from customer, lineorder, supplier, [date]
+where lo_custkey = c_customerkey
 and lo_suppkey = s_suppkey
-and lo_orderdate = d_datekey
+and lo_orderdatekey = d_datekey
 and  (c_city='UNITED KI1'
 or c_city='UNITED KI5')
 and (s_city='UNITED KI1'
@@ -107,10 +110,10 @@ order by d_year asc,  revenue desc;
 --Q3.4
 select c_city, s_city, d_year, sum(lo_revenue)
 as  revenue
-from customer, lineorder, supplier, date
-where lo_custkey = c_custkey
+from customer, lineorder, supplier, [date]
+where lo_custkey = c_customerkey
 and lo_suppkey = s_suppkey
-and lo_orderdate = d_datekey
+and lo_orderdatekey = d_datekey
 and  (c_city='UNITED KI1'
 or c_city='UNITED KI5')
 and (s_city='UNITED KI1'
@@ -123,10 +126,10 @@ order by d_year asc,  revenue desc;
 select d_year, c_nation,
 sum(lo_revenue - lo_supplycost) as profit
 from date, customer, supplier, part, lineorder
-where lo_custkey = c_custkey
+where lo_custkey = c_customerkey
 and lo_suppkey = s_suppkey
 and lo_partkey = p_partkey
-and lo_orderdate = d_datekey
+and lo_orderdatekey = d_datekey
 and c_region = 'AMERICA'
 and s_region = 'AMERICA'
 and (p_mfgr = 'MFGR#1'
@@ -138,10 +141,10 @@ order by d_year, c_nation;
 select d_year, s_nation, p_category,
 sum(lo_revenue - lo_supplycost) as profit
 from date, customer, supplier, part, lineorder
-where lo_custkey = c_custkey
+where lo_custkey = c_customerkey
 and lo_suppkey = s_suppkey
 and lo_partkey = p_partkey
-and lo_orderdate = d_datekey
+and lo_orderdatekey = d_datekey
 and c_region = 'AMERICA'
 and s_region = 'AMERICA'
 and (d_year = 1997 or d_year = 1998)
