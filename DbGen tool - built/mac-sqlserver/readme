@@ -1,0 +1,3 @@
+This is the compiled output from the Star Schema Benchmark tool when built for use with the Star Schema Benchmark, Mac, and Sql Server (which may seem crazy, but their isn't a MySQL option). It is based on the dbgen tool for the TPC-H benchmark.
+
+I've done nothing new with this and all rights remain with their original owners.
